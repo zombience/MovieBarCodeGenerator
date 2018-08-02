@@ -33,13 +33,12 @@ namespace MovieBarCodeGenerator
 {
     public partial class MainForm : Form
     {
-        private const string GenerateButtonText = "Generate!";
+        private const string GenerateButtonText = "Generate";
         private const string CancelButtonText = "Cancel";
-
-        private OpenFileDialog _openFileDialog;
-        private SaveFileDialog _saveFileDialog;
-        private FfmpegWrapper _ffmpegWrapper;
-        private ImageProcessor _imageProcessor;
+        
+        private FolderBrowserDialog _targetFolderDialog;
+        private FfmpegWrapper       _ffmpegWrapper;
+        private ImageProcessor      _imageProcessor;
 
         private CancellationTokenSource _cancellationTokenSource;
 
@@ -51,19 +50,15 @@ namespace MovieBarCodeGenerator
             Icon = Icon.ExtractAssociatedIcon(executingAssembly.Location);
             Text += $" - {executingAssembly.GetName().Version}";
 
-            _openFileDialog = new OpenFileDialog()
-            {
-                CheckFileExists = true,
-                CheckPathExists = true,
-            };
+            _targetFolderDialog = new FolderBrowserDialog();
 
-            _saveFileDialog = new SaveFileDialog()
-            {
-                DefaultExt = ".png",
-                Filter = "Bitmap|*.bmp|Jpeg|*.jpg|Png|*.png|Gif|*.gif|All files|*.*",
-                FilterIndex = 3, // 1 based
-                OverwritePrompt = true,
-            };
+            //_saveFileDialog = new SaveFileDialog()
+            //{
+            //    DefaultExt = ".png",
+            //    Filter = "Bitmap|*.bmp|Jpeg|*.jpg|Png|*.png|Gif|*.gif|All files|*.*",
+            //    FilterIndex = 3, // 1 based
+            //    OverwritePrompt = true,
+            //};
 
             _ffmpegWrapper = new FfmpegWrapper("ffmpeg.exe");
             _imageProcessor = new ImageProcessor();
@@ -213,7 +208,7 @@ Error: {ex}",
             GetValidatedParameters()
         {
             var inputPath = inputPathTextBox.Text.Trim(new[] { '"' });
-            if (!File.Exists(inputPath))
+            if (!Directory.Exists(inputPath))
             {
                 throw new Exception("The input file does not exist.");
             }
@@ -222,30 +217,9 @@ Error: {ex}",
 
             void ValidateOutputPath(ref string path)
             {
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = "output.png";
-                }
-
-                if (!Path.HasExtension(path))
-                {
-                    path += ".png";
-                }
-
                 if (path.Any(x => Path.GetInvalidPathChars().Contains(x)))
                 {
                     throw new Exception("The output path is invalid.");
-                }
-
-                if (File.Exists(path))
-                {
-                    var promptResult = MessageBox.Show(this,
-                        $"The file '{path}' already exists. Do you want to overwrite it?",
-                        "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                    if (promptResult != DialogResult.Yes)
-                    {
-                        throw new OperationCanceledException();
-                    }
                 }
             }
 
@@ -254,8 +228,7 @@ Error: {ex}",
             string smoothedOutputPath = null;
             if (smoothCheckBox.Checked)
             {
-                var name = $"{Path.GetFileNameWithoutExtension(outputPath)}_smoothed{Path.GetExtension(outputPath)}";
-                smoothedOutputPath = Path.Combine(Path.GetDirectoryName(outputPath), name);
+                smoothedOutputPath = Path.Combine(Path.GetDirectoryName(outputPath), "_smoothed");
                 ValidateOutputPath(ref smoothedOutputPath);
             }
 
@@ -294,17 +267,17 @@ Error: {ex}",
 
         private void browseInputPathButton_Click(object sender, EventArgs e)
         {
-            if (_openFileDialog.ShowDialog(owner: this) == DialogResult.OK)
+            if (_sourceFolderDialog.ShowDialog(owner: this) == DialogResult.OK)
             {
-                inputPathTextBox.Text = _openFileDialog.FileName;
+                inputPathTextBox.Text = _sourceFolderDialog.SelectedPath;
             }
         }
 
         private void browseOutputPathButton_Click(object sender, EventArgs e)
         {
-            if (_saveFileDialog.ShowDialog(owner: this) == DialogResult.OK)
+            if (_targetFolderDialog.ShowDialog(owner: this) == DialogResult.OK)
             {
-                outputPathTextBox.Text = _saveFileDialog.FileName;
+                outputPathTextBox.Text = _targetFolderDialog.SelectedPath;
             }
         }
 

@@ -42,18 +42,18 @@ namespace MovieBarCodeGenerator
         {
             try
             {
-                var process = Process.Start(new ProcessStartInfo
-                {
-                    FileName = FfmpegExecutablePath,
-                    Arguments = args,
-                    // Warning: if a standard stread is redirected but is not read,
-                    // its buffer might fill up and block the whole process.
-                    // Only redirect a standard stream if you read it!
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = redirectError,
-                    UseShellExecute = false,
-                    CreateNoWindow = true,
-                });
+                //var process = Process.Start(new ProcessStartInfo
+                //{
+                //    FileName = FfmpegExecutablePath,
+                //    Arguments = args,
+                //    // Warning: if a standard stread is redirected but is not read,
+                //    // its buffer might fill up and block the whole process.
+                //    // Only redirect a standard stream if you read it!
+                //    RedirectStandardOutput = true,
+                //    RedirectStandardError = redirectError,
+                //    UseShellExecute = false,
+                //    CreateNoWindow = true,
+                //});
                 return process;
             }
             catch (Exception ex)
