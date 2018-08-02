@@ -52,13 +52,15 @@ namespace MovieBarCodeGenerator
 
             _targetFolderDialog = new FolderBrowserDialog();
 
-            //_saveFileDialog = new SaveFileDialog()
-            //{
-            //    DefaultExt = ".png",
-            //    Filter = "Bitmap|*.bmp|Jpeg|*.jpg|Png|*.png|Gif|*.gif|All files|*.*",
-            //    FilterIndex = 3, // 1 based
-            //    OverwritePrompt = true,
-            //};
+            string pythonPath = Directory.GetDirectories("C:\\", "Python*").FirstOrDefault();
+            if(string.IsNullOrEmpty(pythonPath))
+            {
+                pythonPath = Path.Combine("%AppData%", "Local\\Programs");
+            }
+
+            _locatePythonDialog.InitialDirectory = pythonPath;
+            _locatePythonDialog.FileName = "";
+            
 
             _ffmpegWrapper = new FfmpegWrapper("ffmpeg.exe");
             _imageProcessor = new ImageProcessor();
@@ -280,6 +282,20 @@ Error: {ex}",
                 outputPathTextBox.Text = _targetFolderDialog.SelectedPath;
             }
         }
+        private void browseForPythonPathButton_Click(object sender, EventArgs e)
+        {
+            if(_locatePythonDialog.ShowDialog(owner: this) == DialogResult.OK)
+            {
+                pythonLocTextBox.Text = _locatePythonDialog.FileName;
+            }
+        }
+        //private void browseInputPathButton_Click(object sender, EventArgs e)
+        //{
+        //    if (_sourceFolderDialog.ShowDialog(owner: this) == DialogResult.OK)
+        //    {
+        //        inputPathTextBox.Text = _sourceFolderDialog.SelectedPath;
+        //    }
+        //}
 
         private void useInputHeightForOutputCheckBox_CheckedChanged(object sender, EventArgs e)
         {
@@ -329,6 +345,11 @@ Error: {ex}",
         }
 
         private void aboutButton_Click(object sender, EventArgs e) => new AboutBox().ShowDialog();
+
+        private void label8_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 
     public class PercentageProgressHandler : IProgress<double>

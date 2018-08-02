@@ -34,6 +34,9 @@
             this.generateButton = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.pythonLocLabel = new System.Windows.Forms.Label();
+            this.pythonLocTextBox = new System.Windows.Forms.TextBox();
+            this.browseForPythonButton = new System.Windows.Forms.Button();
             this.label2 = new System.Windows.Forms.Label();
             this.outputPathTextBox = new System.Windows.Forms.TextBox();
             this.browseOutputPathButton = new System.Windows.Forms.Button();
@@ -53,6 +56,7 @@
             this.aboutButton = new System.Windows.Forms.Button();
             this.toolTip1 = new System.Windows.Forms.ToolTip(this.components);
             this._sourceFolderDialog = new System.Windows.Forms.FolderBrowserDialog();
+            this._locatePythonDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -82,7 +86,7 @@
             // generateButton
             // 
             this.generateButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.generateButton.Location = new System.Drawing.Point(529, 295);
+            this.generateButton.Location = new System.Drawing.Point(532, 355);
             this.generateButton.Margin = new System.Windows.Forms.Padding(4);
             this.generateButton.Name = "generateButton";
             this.generateButton.Size = new System.Drawing.Size(100, 28);
@@ -104,6 +108,9 @@
             // 
             this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox1.Controls.Add(this.pythonLocLabel);
+            this.groupBox1.Controls.Add(this.pythonLocTextBox);
+            this.groupBox1.Controls.Add(this.browseForPythonButton);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.outputPathTextBox);
             this.groupBox1.Controls.Add(this.browseOutputPathButton);
@@ -114,10 +121,43 @@
             this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
-            this.groupBox1.Size = new System.Drawing.Size(613, 144);
+            this.groupBox1.Size = new System.Drawing.Size(613, 189);
             this.groupBox1.TabIndex = 0;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Files";
+            // 
+            // pythonLocLabel
+            // 
+            this.pythonLocLabel.AutoSize = true;
+            this.pythonLocLabel.Location = new System.Drawing.Point(8, 139);
+            this.pythonLocLabel.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.pythonLocLabel.Name = "pythonLocLabel";
+            this.pythonLocLabel.Size = new System.Drawing.Size(140, 17);
+            this.pythonLocLabel.TabIndex = 9;
+            this.pythonLocLabel.Text = "Python.exe Location:";
+            this.pythonLocLabel.Click += new System.EventHandler(this.label8_Click);
+            // 
+            // pythonLocTextBox
+            // 
+            this.pythonLocTextBox.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.pythonLocTextBox.Location = new System.Drawing.Point(8, 159);
+            this.pythonLocTextBox.Margin = new System.Windows.Forms.Padding(4);
+            this.pythonLocTextBox.Name = "pythonLocTextBox";
+            this.pythonLocTextBox.Size = new System.Drawing.Size(488, 22);
+            this.pythonLocTextBox.TabIndex = 7;
+            // 
+            // browseForPythonButton
+            // 
+            this.browseForPythonButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.browseForPythonButton.Location = new System.Drawing.Point(505, 156);
+            this.browseForPythonButton.Margin = new System.Windows.Forms.Padding(4);
+            this.browseForPythonButton.Name = "browseForPythonButton";
+            this.browseForPythonButton.Size = new System.Drawing.Size(100, 28);
+            this.browseForPythonButton.TabIndex = 8;
+            this.browseForPythonButton.Text = "Browse...";
+            this.browseForPythonButton.UseVisualStyleBackColor = true;
+            this.browseForPythonButton.Click += new System.EventHandler(this.browseForPythonPathButton_Click);
             // 
             // label2
             // 
@@ -166,7 +206,7 @@
             this.groupBox2.Controls.Add(this.imageHeightTextBox);
             this.groupBox2.Controls.Add(this.label3);
             this.groupBox2.Controls.Add(this.imageWidthTextBox);
-            this.groupBox2.Location = new System.Drawing.Point(16, 166);
+            this.groupBox2.Location = new System.Drawing.Point(19, 226);
             this.groupBox2.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox2.Name = "groupBox2";
             this.groupBox2.Padding = new System.Windows.Forms.Padding(4);
@@ -292,7 +332,7 @@
             // 
             this.progressBar1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(65, 295);
+            this.progressBar1.Location = new System.Drawing.Point(68, 355);
             this.progressBar1.Margin = new System.Windows.Forms.Padding(4);
             this.progressBar1.Name = "progressBar1";
             this.progressBar1.Size = new System.Drawing.Size(456, 28);
@@ -301,7 +341,7 @@
             // 
             // aboutButton
             // 
-            this.aboutButton.Location = new System.Drawing.Point(16, 295);
+            this.aboutButton.Location = new System.Drawing.Point(19, 355);
             this.aboutButton.Margin = new System.Windows.Forms.Padding(4);
             this.aboutButton.Name = "aboutButton";
             this.aboutButton.Size = new System.Drawing.Size(41, 28);
@@ -320,18 +360,24 @@
             // 
             this._sourceFolderDialog.RootFolder = System.Environment.SpecialFolder.CommonPictures;
             // 
+            // _locatePythonDialog
+            // 
+            this._locatePythonDialog.FileName = "_locatePythonDialog";
+            this._locatePythonDialog.Filter = "\"python executable|*.exe|All files|*.*\"";
+            this._locatePythonDialog.InitialDirectory = "C:\\";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(645, 326);
+            this.ClientSize = new System.Drawing.Size(645, 426);
             this.Controls.Add(this.aboutButton);
             this.Controls.Add(this.progressBar1);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.generateButton);
             this.Margin = new System.Windows.Forms.Padding(4);
-            this.MaximumSize = new System.Drawing.Size(133333330, 373);
+            this.MaximumSize = new System.Drawing.Size(133333330, 473);
             this.MinimumSize = new System.Drawing.Size(661, 373);
             this.Name = "MainForm";
             this.Text = "Movie BarCode Generator";
@@ -369,6 +415,10 @@
         private System.Windows.Forms.CheckBox smoothCheckBox;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.FolderBrowserDialog _sourceFolderDialog;
+        private System.Windows.Forms.Label pythonLocLabel;
+        private System.Windows.Forms.TextBox pythonLocTextBox;
+        private System.Windows.Forms.Button browseForPythonButton;
+        private System.Windows.Forms.OpenFileDialog _locatePythonDialog;
     }
 }
 
