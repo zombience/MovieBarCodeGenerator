@@ -16,8 +16,12 @@ The CineSculptures repo has been included as a git submodule in this repo.
 ## Getting Started with this Repo: 
 
 If you'd like to just use this code without tinkering or making your own build, the included zipfile:
+
 build.zip
-Contains a working build, ffmpeg, and all necessary python code and libraries
+
+Contains a working build, ffmpeg, and all necessary python code and libraries. You will still need to install opencv-python
+
+OTHERWISE: 
 
 Download [ffmpeg](http://ffmpeg.org)
 Ensure that you have Python35 for CineSculptures. It may work in Python36, but has not been tested
