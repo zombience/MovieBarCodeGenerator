@@ -21,28 +21,20 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
-using System.Linq;
-using System.Text;
+using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace MovieBarCodeGenerator
 {
-    public class BarCodeParameters
-    {
-        public int Width { get; set; } = 1000;
-        public int? Height { get; set; } = null;
-        public int BarWidth { get; set; } = 1;
-    }
 
     public class ImageProcessor
     {
-        public Bitmap CreateBarCode(
-            string inputPath,
-            BarCodeParameters parameters,
-            FfmpegWrapper ffmpeg,
-            CancellationToken cancellationToken,
-            IProgress<double> progress = null)
+        public (Bitmap, string) CreateBarCode(
+            string              inputPath,
+            FfmpegWrapper       ffmpeg,
+            CancellationToken   cancellationToken,
+            IProgress<double>   progress = null)
         {
             Bitmap finalBitmap = null;
             Graphics finalBitmapGraphics = null;
@@ -56,9 +48,13 @@ namespace MovieBarCodeGenerator
                 }
                 return finalBitmapGraphics;
             }
+            
+            var barCount = (int)Math.Round((double)SettingsHandler.ImageWidth / SettingsHandler.BarWidth);
 
-            var barCount = (int)Math.Round((double)parameters.Width / parameters.BarWidth);
-            var source = ffmpeg.GetImagesFromMedia(inputPath, barCount, cancellationToken);
+            var audioPath = Path.ChangeExtension(Path.GetFileName(inputPath), "wav");
+            audioPath = Path.Combine(SettingsHandler.OutputDir, audioPath);
+
+            var source = ffmpeg.GetImagesFromMedia(inputPath, audioPath, barCount, cancellationToken);
 
             int? finalBitmapHeight = null;
 
@@ -67,22 +63,22 @@ namespace MovieBarCodeGenerator
             {
                 if (finalBitmapHeight == null)
                 {
-                    finalBitmapHeight = parameters.Height ?? image.Height;
+                    finalBitmapHeight = SettingsHandler.ImageHeight ?? image.Height;
                 }
 
-                var surface = GetDrawingSurface(parameters.Width, finalBitmapHeight.Value);
-                surface.DrawImage(image, x, 0, parameters.BarWidth, finalBitmapHeight.Value);
+                var surface = GetDrawingSurface(SettingsHandler.ImageWidth, finalBitmapHeight.Value);
+                surface.DrawImage(image, x, 0, SettingsHandler.BarWidth, finalBitmapHeight.Value);
 
-                x += parameters.BarWidth;
+                x += SettingsHandler.BarWidth;
 
-                progress?.Report((double)x / parameters.Width);
+                progress?.Report((double)x / SettingsHandler.ImageWidth);
 
                 image.Dispose();
             }
 
             finalBitmapGraphics?.Dispose();
 
-            return finalBitmap;
+            return (finalBitmap, audioPath);
         }
 
         public Bitmap GetSmoothedCopy(Bitmap inputImage)
@@ -104,11 +100,11 @@ namespace MovieBarCodeGenerator
 
             using (var g = Graphics.FromImage(destImage))
             {
-                g.CompositingMode = CompositingMode.SourceCopy;
-                g.CompositingQuality = CompositingQuality.HighQuality;
-                g.InterpolationMode = InterpolationMode.NearestNeighbor; // best results for barcodes
-                g.SmoothingMode = SmoothingMode.HighQuality;
-                g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                g.CompositingMode       = CompositingMode.SourceCopy;
+                g.CompositingQuality    = CompositingQuality.HighQuality;
+                g.InterpolationMode     = InterpolationMode.NearestNeighbor; // best results for barcodes
+                g.SmoothingMode         = SmoothingMode.HighQuality;
+                g.PixelOffsetMode       = PixelOffsetMode.HighQuality;
 
                 using (var wrapMode = new ImageAttributes())
                 {

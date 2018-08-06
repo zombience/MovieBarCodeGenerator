@@ -1,0 +1,3 @@
+[submodule "CineSculptures_Audio"]
+	path = CineSculptures_Audio
+	url = https://github.com/zombience/CineSculptures_Audio.git

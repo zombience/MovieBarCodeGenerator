@@ -17,6 +17,7 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
@@ -62,9 +63,9 @@ namespace MovieBarCodeGenerator
             }
         }
 
-        public TimeSpan GetMediaDuration(string inputPath, CancellationToken cancellationToken)
+        public TimeSpan GetMediaDuration(string inputPath, string audioPath, CancellationToken cancellationToken)
         {
-            var args = $"-i \"{inputPath}\"";
+            var args = $"-i \"{inputPath}\" {audioPath}";
 
             var process = StartFfmpegInstance(args, redirectError: true);
 
@@ -87,15 +88,16 @@ namespace MovieBarCodeGenerator
             }
         }
 
-        public IEnumerable<Bitmap> GetImagesFromMedia(string inputPath, int frameCount, CancellationToken cancellationToken)
+        public IEnumerable<Bitmap> GetImagesFromMedia(string inputPath, string audioPath, int frameCount, CancellationToken cancellationToken)
         {
-            var length = GetMediaDuration(inputPath, cancellationToken);
+            var length = GetMediaDuration(inputPath, audioPath, cancellationToken);
 
             var fps = frameCount / length.TotalSeconds;
 
+            string outputFile = string.Empty;
             // Output a raw stream of bitmap images taken at the specified frequency
             var args = $"-i \"{inputPath}\" -vf fps={fps} -c:v bmp -f rawvideo -an -";
-
+            
             var process = StartFfmpegInstance(args);
 
             IEnumerable<Bitmap> GetLazyStream()
