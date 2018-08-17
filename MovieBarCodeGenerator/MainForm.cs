@@ -190,6 +190,10 @@ namespace MovieBarCodeGenerator
                 var cancellationLocalRef = _cancellationTokenSource;
 
                 string outputFile = Path.Combine(SettingsHandler.OutputDir, Path.GetFileName(files[i]));  
+                if(!Directory.Exists(Path.GetDirectoryName(outputFile)))
+                {
+                    Directory.CreateDirectory(Path.GetDirectoryName(outputFile));
+                }
                 outputFile = Path.ChangeExtension(outputFile, "png");
 
                 //MessageBox.Show(this,
@@ -218,7 +222,8 @@ namespace MovieBarCodeGenerator
                     await Task.Run(() =>
                     {
                         (result, audioFile) = _imageProcessor.CreateBarCode(files[i], _ffmpegWrapper, _cancellationTokenSource.Token, progress);
-                        var args = $"-file {audioFile} -chunk {SettingsHandler.ChunkSize}";
+                        
+                        var args = $"-file \"{audioFile}\" -chunk {SettingsHandler.ChunkSize}";
                         AudioProcessor.ProcessAudio(args, _cancellationTokenSource.Token);
 
                     }, _cancellationTokenSource.Token);

@@ -52,7 +52,7 @@ namespace MovieBarCodeGenerator
             var barCount = (int)Math.Round((double)SettingsHandler.ImageWidth / SettingsHandler.BarWidth);
 
             var audioPath = Path.ChangeExtension(Path.GetFileName(inputPath), "wav");
-            audioPath = Path.Combine(SettingsHandler.OutputDir, audioPath);
+            audioPath = Path.Combine(SettingsHandler.OutputDir, audioPath.Replace(" ", ""));
 
             var source = ffmpeg.GetImagesFromMedia(inputPath, audioPath, barCount, cancellationToken);
 
