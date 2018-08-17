@@ -14,21 +14,32 @@ It will also make use [CineSculptures Audio](https://github.com/zombience/CineSc
 The CineSculptures repo has been included as a git submodule in this repo. 
 
 ## Getting Started with this Repo: 
+
+If you'd like to just use this code without tinkering or making your own build, the included zipfile:
+
+build.zip
+
+Contains a working build, ffmpeg, and all necessary python code and libraries. You will still need to install opencv-python
+
+OTHERWISE: 
+
 Download [ffmpeg](http://ffmpeg.org)
 Ensure that you have Python35 for CineSculptures. It may work in Python36, but has not been tested
+
 Install OpenCV for python via: `python -m pip install opencv-python`
+
 After cloning repo, make sure to get python submodule via:
-	* git submodule init
-	* git submodule update
+* git submodule init
+* git submodule update
 
 Open .sln and make a build.
 Python files and .dlls will be automatically copied to the same folder as the .exe
 
 If you'd like to move the .exe somewhere else, make sure that the following files and directories are included in the same directory as the .exe:
-	* audio_processing directory and all .py files 
-	* all .dll files
-	* ffmpeg.exe
-	* MovieBarCodeGenerator.exe
+* audio_processing directory and all .py files 
+* all .dll files
+* ffmpeg.exe
+* MovieBarCodeGenerator.exe
 
 
 ## Example results
